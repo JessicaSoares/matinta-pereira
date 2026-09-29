@@ -59,19 +59,3 @@ if (guide && !reducedMotion) {
 } else if (guide) {
   guide.remove();
 }
-const threshold = document.querySelector('.threshold');
-if (threshold && !reducedMotion) {
-  const visual = threshold.querySelector('.threshold-visual');
-  const copy = threshold.querySelector('.threshold-copy');
-  const mask = threshold.querySelector('.threshold-mask');
-  const updateThreshold = () => {
-    const rect = threshold.getBoundingClientRect();
-    const progress = Math.min(1, Math.max(0, -rect.top / (threshold.offsetHeight - innerHeight)));
-    visual.style.transform = `scale(${1.08 + progress * .24}) translateY(${progress * -7}%)`;
-    copy.style.transform = `translateY(calc(-44% + ${progress * -80}px))`;
-    copy.style.opacity = String(1 - progress * 1.25);
-    mask.style.opacity = String(1 - progress * .35);
-  };
-  updateThreshold();
-  addEventListener('scroll', updateThreshold, { passive: true });
-}
