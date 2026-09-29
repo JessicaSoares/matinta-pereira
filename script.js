@@ -2,25 +2,60 @@ const body = document.body;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 addEventListener('load', () => setTimeout(() => body.classList.add('ready'), 400));
 
-if (!reducedMotion) {
-  const layers = document.querySelectorAll('.layers i');
-  addEventListener('pointermove', event => {
-    const x = (event.clientX / innerWidth - .5) * 2;
-    const y = (event.clientY / innerHeight - .5) * 2;
-    layers.forEach((layer, index) => {
-      layer.style.transform = `scale(${1.07 + index * .06}) translate(${x * (index + 1) * 7}px, ${y * (index + 1) * 7}px)`;
-    });
-    document.querySelector('blockquote').style.transform = `perspective(900px) rotateX(${y * -2}deg) rotateY(${x * 3}deg)`;
-  });
-  addEventListener('scroll', () => {
-    document.querySelector('.front').style.marginTop = scrollY * .15 + 'px';
-  }, { passive: true });
-}
-
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
   });
 }, { threshold: .14 });
-
 document.querySelectorAll('.reveal').forEach(item => observer.observe(item));
+
+const guide = document.querySelector('.assobio');
+const guideWord = document.querySelector('.assobio-word');
+const guideNumber = document.querySelector('.assobio-number');
+const chapterNames = ['CHAMADO', 'MEMÓRIA', 'VÔO', 'RETORNO'];
+
+if (guide && !reducedMotion) {
+  const featherField = guide.querySelector('.feather-field');
+  Array.from({ length: 18 }, (_, index) => {
+    const feather = document.createElement('i');
+    feather.style.setProperty('--angle', (index * 47) % 360 + 'deg');
+    feather.style.setProperty('--delay', index * -.31 + 's');
+    feather.style.setProperty('--distance', 18 + (index % 5) * 11 + 'px');
+    featherField.appendChild(feather);
+  });
+
+  let pointerX = 0, pointerY = 0, scrollProgress = 0;
+  const updateJourney = () => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    scrollProgress = scrollY / maxScroll;
+    const chapter = Math.min(3, Math.floor(scrollProgress * 4));
+    const x = 72 - scrollProgress * 59 + Math.sin(scrollProgress * Math.PI * 5) * 7;
+    const y = 13 + scrollProgress * 71;
+    guide.style.transform = `translate3d(${x}vw, ${y}vh, 0) rotate(${-13 + scrollProgress * 28}deg)`;
+    guide.style.setProperty('--progress', scrollProgress);
+    body.dataset.chapter = chapter;
+    guideWord.textContent = chapterNames[chapter];
+    guideNumber.textContent = '0' + (chapter + 1);
+  };
+  updateJourney();
+  addEventListener('scroll', updateJourney, { passive: true });
+  addEventListener('pointermove', event => {
+    pointerX = (event.clientX / innerWidth - .5) * 2;
+    pointerY = (event.clientY / innerHeight - .5) * 2;
+    const quote = document.querySelector('blockquote');
+    if (quote) quote.style.transform = `perspective(900px) rotateX(${pointerY * -2}deg) rotateY(${pointerX * 3}deg)`;
+  });
+
+  const layers = document.querySelectorAll('.layers i');
+  const animateLayers = () => {
+    layers.forEach((layer, index) => {
+      layer.style.transform = `scale(${1.07 + index * .06}) translate(${pointerX * (index + 1) * 7}px, ${pointerY * (index + 1) * 7}px)`;
+    });
+    const front = document.querySelector('.front');
+    if (front) front.style.marginTop = scrollY * .15 + 'px';
+    requestAnimationFrame(animateLayers);
+  };
+  animateLayers();
+} else if (guide) {
+  guide.remove();
+}
