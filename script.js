@@ -95,3 +95,17 @@ if (forestChapter && forestReveal && !reducedMotion) {
   updateForestReveal();
   addEventListener('scroll', updateForestReveal, { passive: true });
 }
+
+const worldSection = document.querySelector('.world');
+const mountains = document.querySelector('.mountains');
+const finaleRings = document.querySelector('.rings');
+const updateLandscapeDepth = () => {
+  if (worldSection && mountains) {
+    const rect = worldSection.getBoundingClientRect();
+    mountains.style.transform = 'translateY(' + (rect.top * -.075) + 'px) scale(1.04)';
+    worldSection.style.backgroundPosition = 'center ' + (rect.top * -.035) + 'px';
+  }
+  if (finaleRings) finaleRings.style.transform = 'translateY(' + (scrollY * -.018) + 'px)';
+};
+updateLandscapeDepth();
+addEventListener('scroll', updateLandscapeDepth, { passive: true });
