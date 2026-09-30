@@ -47,17 +47,17 @@ scenes.forEach(scene => sceneObserver.observe(scene));
 
 const atmosphere = document.querySelector('.atmosphere');
 if (atmosphere && !reducedMotion) {
-  const particles = Array.from({ length: 12 }, (_, index) => {
+  const particles = Array.from({ length: 9 }, (_, index) => {
     const particle = document.createElement('span');
     const feather = index % 3 === 0;
-    const size = 10 + (index % 5) * 4;
+    const size = 24 + (index % 4) * 7;
     particle.className = feather ? 'feather' : 'leaf';
     particle.style.setProperty('--size', size + 'px');
     atmosphere.appendChild(particle);
     return {
       node: particle,
       x: index % 2 ? 91 + (index % 4) * 3 : -10 - (index % 4) * 3,
-      y: (index * 29.17) % 150 - 35,
+      y: -25 - index * 18,
       depth: .3 + (index % 7) * .15,
       spin: index % 2 ? 1 : -1,
       size
@@ -67,7 +67,7 @@ if (atmosphere && !reducedMotion) {
   addEventListener('scroll', () => { latestScroll = scrollY; }, { passive: true });
   const animateAtmosphere = time => {
     particles.forEach((particle, index) => {
-      const travel = latestScroll * (.008 + particle.depth * .007);
+      const travel = latestScroll * (.035 + particle.depth * .018);
       const y = ((particle.y + travel) % 150) - 28;
       const x = particle.x + Math.sin(time * .00045 + index * 1.77) * (4 + particle.depth * 6);
       const turn = latestScroll * .018 * particle.spin + time * .017 * particle.spin;
