@@ -47,7 +47,7 @@ scenes.forEach(scene => sceneObserver.observe(scene));
 
 const atmosphere = document.querySelector('.atmosphere');
 if (atmosphere && !reducedMotion) {
-  const particles = Array.from({ length: 34 }, (_, index) => {
+  const particles = Array.from({ length: 12 }, (_, index) => {
     const particle = document.createElement('span');
     const feather = index % 3 === 0;
     const size = 10 + (index % 5) * 4;
@@ -56,7 +56,7 @@ if (atmosphere && !reducedMotion) {
     atmosphere.appendChild(particle);
     return {
       node: particle,
-      x: (index * 37.73) % 108 - 4,
+      x: index % 2 ? 91 + (index % 4) * 3 : -10 - (index % 4) * 3,
       y: (index * 29.17) % 150 - 35,
       depth: .3 + (index % 7) * .15,
       spin: index % 2 ? 1 : -1,
