@@ -78,3 +78,20 @@ if (atmosphere && !reducedMotion) {
   };
   requestAnimationFrame(animateAtmosphere);
 }
+
+const forestChapter = document.querySelector('.lore');
+const forestReveal = document.querySelector('.forest-rise');
+if (forestChapter && forestReveal && !reducedMotion) {
+  const updateForestReveal = () => {
+    const rect = forestChapter.getBoundingClientRect();
+    const visible = Math.min(1, Math.max(0, (innerHeight - rect.top) / (innerHeight + rect.height * .18)));
+    forestReveal.style.opacity = String(Math.max(0, (visible - .08) * 1.18));
+    forestReveal.style.setProperty('--forest-progress', visible);
+    forestReveal.style.transform = 'translateY(' + ((1 - visible) * 90) + 'px) scale(' + (1.08 - visible * .08) + ')';
+    forestChapter.classList.toggle('forest-awake', visible > .48);
+    forestReveal.style.setProperty('background-position-y', (55 - visible * 7) + '%');
+    forestReveal.style.setProperty('--forest-shift', visible);
+  };
+  updateForestReveal();
+  addEventListener('scroll', updateForestReveal, { passive: true });
+}
