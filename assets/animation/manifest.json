@@ -1,0 +1,23 @@
+﻿{
+    "transform":  {
+                      "height":  480,
+                      "width":  384,
+                      "columns":  8,
+                      "count":  19,
+                      "src":  "assets/animation/transform.png"
+                  },
+    "flight":  {
+                   "height":  480,
+                   "width":  384,
+                   "columns":  8,
+                   "count":  18,
+                   "src":  "assets/animation/flight.png"
+               },
+    "idle":  {
+                 "height":  480,
+                 "width":  384,
+                 "columns":  8,
+                 "count":  13,
+                 "src":  "assets/animation/idle.png"
+             }
+}
